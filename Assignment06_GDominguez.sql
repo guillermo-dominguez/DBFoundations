@@ -246,15 +246,15 @@ go
 CREATE VIEW vPrice 
 WITH SCHEMABINDING
 AS 
-	SELECT c.CategoryName, p.ProductName, p.UnitPrice
+	SELECT TOP 10000 c.CategoryName, p.ProductName, p.UnitPrice
 	FROM dbo.vCategories AS c
 	INNER JOIN dbo.vProducts as p
-	ON c.CategoryID = p.CategoryID;
+	ON c.CategoryID = p.CategoryID
+	ORDER BY CategoryName, ProductName;
 go
 
 SELECT *
-FROM vPrice
-ORDER BY CategoryName, ProductName;
+FROM vPrice;
 go
 
 
@@ -272,15 +272,15 @@ go
 CREATE VIEW vCounts
 WITH SCHEMABINDING 
 AS
-	SELECT p.ProductName, i.InventoryDate, i.Count
+	SELECT TOP 100000 p.ProductName, i.InventoryDate, i.Count
 	FROM dbo.vProducts AS p
 	INNER JOIN dbo.vInventories AS i
-	ON p.ProductID = i.ProductID;
+	ON p.ProductID = i.ProductID
+	ORDER BY ProductName, InventoryDate, [Count];
 go
 
 SELECT * 
-FROM vCounts
-ORDER BY ProductName, InventoryDate, [Count];
+FROM vCounts;
 go
 
 -- Here is an example of some rows selected from the view:
@@ -300,16 +300,16 @@ go
 CREATE VIEW vDateOfCount
 WITH SCHEMABINDING
 AS
-	SELECT i.InventoryDate, e.EmployeeFirstName + ' '+ e.EmployeeLastName AS EmployeeName
+	SELECT TOP 10000 i.InventoryDate, e.EmployeeFirstName + ' '+ e.EmployeeLastName AS EmployeeName
 	FROM dbo.vInventories AS i
 	INNER JOIN  dbo.vEmployees AS e
 	ON i.EmployeeID = e.EmployeeID
-	GROUP BY i.InventoryDate, e.EmployeeFirstName + ' '+ e.EmployeeLastName;
+	GROUP BY i.InventoryDate, e.EmployeeFirstName + ' '+ e.EmployeeLastName
+	ORDER BY InventoryDate;
 go
 
 SELECT *
-FROM vDateOfCount
-ORDER BY InventoryDate;
+FROM vDateOfCount;
 go
 
 
@@ -331,17 +331,17 @@ go
 CREATE VIEW vCatProdDateCount
 WITH SCHEMABINDING
 AS
-	SELECT c.CategoryName, p.ProductName, i.InventoryDate, i.Count
+	SELECT TOP 10000 c.CategoryName, p.ProductName, i.InventoryDate, i.Count
 	FROM dbo.vCategories AS c
 	INNER JOIN dbo.vProducts AS p
 	ON c.CategoryID = p.CategoryID
 	INNER JOIN dbo.vInventories AS i
-	ON p.ProductID = i.ProductID;
+	ON p.ProductID = i.ProductID
+	ORDER BY CategoryName, ProductName, InventoryDate, [Count];
 go
 
 SELECT * 
-FROM vCatProdDateCount
-ORDER BY CategoryName, ProductName, InventoryDate, [Count];
+FROM vCatProdDateCount;
 go
 
 
@@ -363,19 +363,19 @@ go
 CREATE VIEW vCatProdInvCountEmpl
 WITH SCHEMABINDING
 AS
-	SELECT c.CategoryName, p.ProductName, i.InventoryDate, i.Count, e.EmployeeFirstName + ' ' + e.EmployeeLastName AS EmployeeName
+	SELECT TOP 10000 c.CategoryName, p.ProductName, i.InventoryDate, i.Count, e.EmployeeFirstName + ' ' + e.EmployeeLastName AS EmployeeName
 	FROM dbo.vCategories AS c
 	INNER JOIN dbo.vProducts AS p
 	ON c.CategoryID = p.CategoryID
 	INNER JOIN dbo.vInventories AS i
 	ON p.ProductID = i.ProductID
 	INNER JOIN dbo.vEmployees AS e
-	ON i.EmployeeID = e.EmployeeID;
+	ON i.EmployeeID = e.EmployeeID
+	ORDER BY InventoryDate, CategoryName, ProductName, EmployeeName;
 go
 
 SELECT *
-FROM vCatProdInvCountEmpl
-ORDER BY InventoryDate, CategoryName, ProductName, EmployeeName;
+FROM vCatProdInvCountEmpl;
 go
 
 
@@ -396,7 +396,7 @@ go
 CREATE VIEW vChaiChang
 WITH SCHEMABINDING
 AS
-	SELECT c.CategoryName, p.ProductName, i.InventoryDate, i.Count, e.EmployeeFirstName + ' ' + e.EmployeeLastName AS EmployeeName
+	SELECT TOP 10000 c.CategoryName, p.ProductName, i.InventoryDate, i.Count, e.EmployeeFirstName + ' ' + e.EmployeeLastName AS EmployeeName
 	FROM dbo.vCategories AS c
 	INNER JOIN dbo.vProducts AS p
 	ON c.CategoryID = p.CategoryID
@@ -404,12 +404,12 @@ AS
 	ON p.ProductID = i.ProductID
 	INNER JOIN dbo.vEmployees AS e
 	ON i.EmployeeID = e.EmployeeID
-	WHERE p.ProductID IN (SELECT p.ProductID FROM dbo.vProducts WHERE p.ProductName LIKE 'Chai' OR p.ProductName LIKE 'Chang');
+	WHERE p.ProductID IN (SELECT p.ProductID FROM dbo.vProducts WHERE p.ProductName LIKE 'Chai' OR p.ProductName LIKE 'Chang')
+	ORDER BY InventoryDate, CategoryName, ProductName;
 go
 
 SELECT *
-FROM vChaiChang
-ORDER BY InventoryDate, CategoryName, ProductName;
+FROM vChaiChang;
 go
 
 
@@ -431,15 +431,15 @@ go
 CREATE VIEW vManager
 WITH SCHEMABINDING
 AS
-	SELECT e.EmployeeFirstName + ' ' + e.EmployeeLastName AS [Manager], m.EmployeeFirstName + ' ' + m.EmployeeLastName AS [Employee]
+	SELECT TOP 10000 e.EmployeeFirstName + ' ' + e.EmployeeLastName AS [Manager], m.EmployeeFirstName + ' ' + m.EmployeeLastName AS [Employee]
 	FROM dbo.vEmployees AS e
 	Join dbo.vEmployees AS m
-	ON e.EmployeeID = m.ManagerID;
+	ON e.EmployeeID = m.ManagerID
+	ORDER BY Manager, Employee;
 go
 
 SELECT *
-FROM vManager
-ORDER BY Manager, Employee;
+FROM vManager;
 go
 
 
@@ -463,7 +463,7 @@ go
 CREATE VIEW vAllData
 WITH SCHEMABINDING
 AS
-	SELECT  c.CategoryID, c.CategoryName, p.ProductID, p.ProductName, p.UnitPrice, i.InventoryID, i.InventoryDate, i.Count, e.EmployeeFirstName + ' ' + e.EmployeeLastName AS [Employee], m.EmployeeFirstName + ' ' + m.EmployeeLastName AS [Manager]
+	SELECT TOP 10000 c.CategoryID, c.CategoryName, p.ProductID, p.ProductName, p.UnitPrice, i.InventoryID, i.InventoryDate, i.Count, e.EmployeeFirstName + ' ' + e.EmployeeLastName AS [Employee], m.EmployeeFirstName + ' ' + m.EmployeeLastName AS [Manager]
 	FROM dbo.vCategories AS c
 	INNER JOIN dbo.vProducts AS p
 	ON c.CategoryID = p.CategoryID
@@ -472,13 +472,13 @@ AS
 	INNER JOIN dbo.vEmployees AS e
 	ON i.EmployeeID = e.EmployeeID
 	JOIN dbo.vEmployees AS m
-	ON m.EmployeeID = e.ManagerID;	
+	ON m.EmployeeID = e.ManagerID
+	ORDER BY CategoryName, ProductID, InventoryID, Employee;	
 go
 
 
 SELECT *
-FROM vAllData
-ORDER BY CategoryName, ProductID, InventoryID, Employee;
+FROM vAllData;
 go
 
 
