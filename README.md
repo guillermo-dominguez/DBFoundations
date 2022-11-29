@@ -1,2 +1,2 @@
 # DBFoundations
-This is my ReadMe file for Assignment 6
+This is my ReadMe file for the DBFoundation Coursework
